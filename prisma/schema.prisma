@@ -1,0 +1,55 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Place {
+  id          String     @id @default(uuid())
+  name        String
+  address     String
+  category    String     // e.g., restaurant, hospital, metro, airport, bus_stop, hotel, parking, atm, ev_charging, school, police, mall
+  lat         Float
+  lng         Float
+  rating      Float      @default(0.0)
+  description String?
+  photos      String?    // JSON array of strings
+  createdAt   DateTime   @default(now())
+  favorites   Favorite[]
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  placeId   String
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([placeId])
+}
+
+model RecentSearch {
+  id        String   @id @default(uuid())
+  query     String
+  lat       Float?
+  lng       Float?
+  createdAt DateTime @default(now())
+}
+
+model Route {
+  id          String   @id @default(uuid())
+  name        String
+  sourceName  String
+  sourceLat   Float
+  sourceLng   Float
+  destName    String
+  destLat     Float
+  destLng     Float
+  mode        String   // driving, walking, cycling, transit
+  geometry    String   // JSON string of coordinate arrays [[lat, lng], ...]
+  distance    Float    // in km
+  duration    Float    // in minutes
+  createdAt   DateTime @default(now())
+}

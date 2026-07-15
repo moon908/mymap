@@ -1,26 +1,151 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-neutral-bg: var(--neutral-bg);
+  
+  --radius-card-sm: 12px;
+  --radius-card-md: 16px;
+  --radius-card-lg: 24px;
+  
+  --radius-button: 10px;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #0052CC;
+  --secondary: #E5F0FF;
+  --tertiary: #D75800;
+  --neutral-bg: #F4F6F9;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --primary: #007AFF;
+  --secondary: rgba(0, 122, 255, 0.2);
+  --neutral-bg: #121214;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Glassmorphism utility classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass-panel {
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Custom popup styling for MapLibre */
+.maplibregl-popup-content {
+  border-radius: 16px !important;
+  padding: 0 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden;
+  background: #ffffff !important;
+}
+
+.dark .maplibregl-popup-content {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f2f2f7 !important;
+}
+
+.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: #ffffff !important;
+}
+.dark .maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: #1c1c1e !important;
+}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: #ffffff !important;
+}
+.dark .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: #1c1c1e !important;
+}
+.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: #ffffff !important;
+}
+.dark .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: #1c1c1e !important;
+}
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: #ffffff !important;
+}
+.dark .maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: #1c1c1e !important;
+}
+
+.maplibregl-popup-close-button {
+  color: #8e8e93;
+  font-size: 16px;
+  right: 8px !important;
+  top: 8px !important;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.maplibregl-popup-close-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #1c1c1e;
+}
+
+.dark .maplibregl-popup-close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* User Location accuracy circle animation */
+@keyframes pulse-accuracy {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.15;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.15;
+  }
+}
+
+.pulse-accuracy-circle {
+  animation: pulse-accuracy 3s infinite ease-in-out;
 }
