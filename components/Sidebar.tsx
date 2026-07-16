@@ -31,6 +31,7 @@ export default function Sidebar({ onFlyTo, mapBbox }: SidebarProps) {
     apiKey,
     setApiKey,
     markers,
+    addMarker,
     deleteMarker,
     bookmarks,
     deleteBookmark,
@@ -113,8 +114,33 @@ export default function Sidebar({ onFlyTo, mapBbox }: SidebarProps) {
 
   const handleSelectSearchResult = (item: SearchResult) => {
     onFlyTo(item.lng, item.lat, 14);
-    // Automatically add a temp marker for the searched place
-    setSelectedMarkerId(null);
+    
+    // Check if a marker for this exact location already exists to avoid duplicates
+    const exists = markers.some(
+      (m) => m.lat.toFixed(6) === item.lat.toFixed(6) && m.lng.toFixed(6) === item.lng.toFixed(6)
+    );
+    
+    if (!exists) {
+      const newMarkerId = `search-${Date.now()}`;
+      addMarker({
+        id: newMarkerId,
+        lat: item.lat,
+        lng: item.lng,
+        title: item.name,
+        description: item.address || 'Searched Location',
+        timestamp: new Date().toISOString(),
+        color: '#007AFF', // Design system Primary (Vibrant Blue)
+      });
+      setSelectedMarkerId(newMarkerId);
+    } else {
+      // If it exists, find it and select it to highlight it
+      const existing = markers.find(
+        (m) => m.lat.toFixed(6) === item.lat.toFixed(6) && m.lng.toFixed(6) === item.lng.toFixed(6)
+      );
+      if (existing) {
+        setSelectedMarkerId(existing.id);
+      }
+    }
   };
 
   const handleSaveSettings = () => {
